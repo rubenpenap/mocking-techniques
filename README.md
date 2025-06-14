@@ -1,3 +1,13 @@
+> ## 🚨 Important Notice
+>
+> This repository is a clone of the
+> [Mocking Techniques](https://www.epicweb.dev/workshops/mocking-techniques-in-vitest)
+> by Epic Web. It has been published solely to document my GitHub activity
+> and for personal educational purposes.
+>
+> **Note:** This is not an official fork or a maintained derivative of the
+> original project.
+
 <div align="center">
   <h1>Mocking Techniques in Vitest</h1>
   <strong>
