@@ -1,46 +1,40 @@
-import { debounce } from './debounce.js'
+import { debounce } from './debounce.js';
 
-// 🐨 Add the `beforeAll()` and `afterAll()` hooks that
-// mock the date using `vi.useFakeTimers()` and
-// `vi.useRealTimers()` respectively.
-// 💰 beforeAll(callback)
-// 💰 afterAll(callback)
+beforeAll(() => {
+	vi.useFakeTimers();
+});
+
+afterAll(() => {
+	vi.useRealTimers();
+});
 
 test('executes the callback after the debounce timeout passes', () => {
-  const fn = vi.fn<(input: string) => void>()
-  const debouncedFn = debounce(fn, 250)
+	const fn = vi.fn<(input: string) => void>();
+	const debouncedFn = debounce(fn, 250);
 
-  // 🐨 First, call the "debounceFn" with "one" as the argument
-  // and assert that the "fn" has not been called.
-  // 💰 expect(fn).not.toHaveBeenCalled()
+	debouncedFn('one');
+	expect(fn).not.toHaveBeenCalled();
 
-  // 🐨 Advance the mock timers by 250ms (the duration of debounce).
-  // 💰 vi.advanceTimersByTime(duration)
+	vi.advanceTimersByTime(250);
 
-  // 🐨 Write an assertion that "fn" has been called once.
-  // 🐨 Write another assertion that "fn" has been called
-  // with the correct arguments.
-})
+	expect(fn).toHaveBeenCalledOnce();
+	expect(fn).toHaveBeenCalledWith('one');
+});
 
 test('debounces the callback until the timeout passes since the last call', () => {
-  const fn = vi.fn<(input: string) => void>()
-  const debouncedFn = debounce(fn, 250)
+	const fn = vi.fn<(input: string) => void>();
+	const debouncedFn = debounce(fn, 250);
 
-  // 🐨 Start this test case similarly to the previous one:
-  // call the "debouncedFn" with "one" as the argument and assert
-  // that it has not been called.
-  // 💰 debouncedFn('one')
+	debouncedFn('one');
+	expect(fn).not.toHaveBeenCalled();
 
-  // 🐨 Then, advance the timers by 100ms to emulate that some
-  // time has passed but not enough to trigger the debounce.
-  // 💰 vi.advanceTimersByTime(duration)
+	vi.advanceTimersByTime(100);
 
-  // 🐨 Now, call the "debouncedFn" function again, passing "two"
-  // as the argument. Assert that the "fn" has not been called.
+	debouncedFn('two');
+	expect(fn).not.toHaveBeenCalled();
 
-  // 🐨 Advance the timers by 250ms (the duration of debounce).
+	vi.advanceTimersByTime(250);
 
-  // 🐨 Finally, write the assertions for the "fn" function:
-  // - that it has been called once;
-  // - that it has been called with the correct arguments.
-})
+	expect(fn).toHaveBeenCalledOnce();
+	expect(fn).toHaveBeenCalledWith('two');
+});
