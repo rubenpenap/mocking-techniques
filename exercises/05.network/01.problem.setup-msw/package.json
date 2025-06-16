@@ -5,6 +5,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "msw": "^2.10.2",
     "vitest": "^2.0.4"
   }
 }
