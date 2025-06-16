@@ -1,31 +1,27 @@
-import { printServerUrl } from './print-server-url.js'
+import { printServerUrl } from './print-server-url.js';
 
 beforeAll(() => {
-  // 🐨 Create a spy over `console.log` using `vi.spyOn()`.
-  // You can call `.mockImplementation(() => {})` on the spy to silence
-  // the `console.log` calls.
-  // 💰 vi.spyOn(target, methodName)
-})
+	vi.spyOn(console, 'log').mockImplementation(() => {});
+});
 
 afterEach(() => {
-  // 🐨 Reset all mocks using `vi.resetAllMocks()` function.
-})
+	vi.clearAllMocks();
+});
 
 afterAll(() => {
-  // 🐨 Restore all mocked globals by calling `vi.restoreAllMocks()`.
-})
+	vi.restoreAllMocks();
+});
 
 test('prints the server message for url with host and no port', () => {
-  printServerUrl({ host: '127.0.0.1' })
-
-  // 🐨 Write an assertion that checks that `console.log`
-  // has been called once with the correct message.
-  // 💰 expect(console.log).toHaveBeenCalledWith(args)
-})
+	printServerUrl({ host: '127.0.0.1' });
+	expect(console.log).toHaveBeenCalledWith(
+		`Server is listening at http://127.0.0.1/`,
+	);
+});
 
 test('prints the server message for url with host and port', () => {
-  printServerUrl({ host: '127.0.0.1', port: 5639 })
-
-  // 🐨 Similarly, add an assertion that checks that `console.log`
-  // has been called with the URL that includes the host and port.
-})
+	printServerUrl({ host: '127.0.0.1', port: 5639 });
+	expect(console.log).toHaveBeenCalledWith(
+		`Server is listening at http://127.0.0.1:5639/`,
+	);
+});
