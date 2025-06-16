@@ -1,71 +1,57 @@
-import { Emitter } from './emitter.js'
+import { Emitter } from './emitter.js';
 
-// 🐨 Add the `beforeAll()` hook and mock the `console.log` in there.
-// Mock the implementation of the `console.log` method to be an empty function.
-// Use the previous exercise in "Globals, Global methods" for reference!
-// 💰 beforeAll(callback)
-// 💰 vi.spyOn(target, method).mockImplementation(implementation)
+beforeAll(() => {
+	vi.spyOn(console, 'log').mockImplementation(() => {});
+});
 
-// 🐨 Add the `afterEach()` hook that does two things:
-// 1. Reset any introduced mock functions via `vi.resetAllMocks()`.
-// 2. Unstubs any stubbed environment variables via `vi.unstubAllEnvs()`.
-// 💰 afterEach(callback)
+afterEach(() => {
+	vi.resetAllMocks();
+	vi.unstubAllEnvs();
+});
 
-// 🐨 Complete the setup by adding the `afterAll()` hook
-// and restoring any mocks after the tests are done via `vi.restoreAllMocks()`.
-// 💰 afterAll(callback)
+afterAll(() => {
+	vi.restoreAllMocks();
+});
 
 test('invokes the listener whenever a matching event is emitted', () => {
-  const emitter = new Emitter<{ hello: [firstName: string] }>()
-  const listener = vi.fn()
+	const emitter = new Emitter<{ hello: [firstName: string] }>();
+	const listener = vi.fn();
 
-  emitter.on('hello', listener)
-  emitter.emit('hello', 'John')
+	emitter.on('hello', listener);
+	emitter.emit('hello', 'John');
 
-  expect(listener).toHaveBeenCalledOnce()
-  expect(listener).toHaveBeenCalledWith('John')
-})
+	expect(listener).toHaveBeenCalledOnce();
+	expect(listener).toHaveBeenCalledWith('John');
+});
 
 test('logs debugging messages when run in development', () => {
-  // 🐨 Mock the value of the `process.env.NODE_ENV` variable
-  // to be "development", using the `vi.stubEnv()` function.
-  // 💰 vi.stubEnv(variableName, value)
-  // 🦉 The `vi.stubEnv()` function directly accepts the
-  // variable name (e.g. "NODE_ENV"). No need to repeat the entire path to it.
+	vi.stubEnv('NODE_ENV', 'development');
 
-  const emitter = new Emitter<{ hello: [firstName: string] }>()
-  const listener = vi.fn()
+	const emitter = new Emitter<{ hello: [firstName: string] }>();
+	const listener = vi.fn();
 
-  // 🐨 Add the `listener` mock function as the listener to the "hello" event.
-  // 💰 emitter.on(event, listener)
+	emitter.on('hello', listener);
 
-  // 🐨 Write an assertion that the `console.log` has been called
-  // with the message "adding listener for "hello" event"
-  // 💰 expect(mock).toHaveBeenCalledWith(args)
+	expect(console.log).toHaveBeenCalledWith('adding listener for "hello" event');
 
-  // 🐨 Emit the "hello" event with "John" as the data.
-  // 💰 emitter.emit(event, data)
+	emitter.emit('hello', 'John');
 
-  // 🐨 Write another assertion that the `console.log` has been called
-  // with the message "emitting listeners for "hello" event (1)"
-})
+	expect(console.log).toHaveBeenCalledWith(
+		'emitting listeners for "hello" event (1)',
+	);
+});
 
 test('does not log debugging messages in production', () => {
-  // 🐨 In a similar fashion, mock the `process.env.NODE_ENV` variable
-  // to equal to "production".
-  // 💰 vi.stubEnv(variableName, value)
+	vi.stubEnv('NODE_ENV', 'production');
 
-  const emitter = new Emitter<{ hello: [firstName: string] }>()
-  const listener = vi.fn()
+	const emitter = new Emitter<{ hello: [firstName: string] }>();
+	const listener = vi.fn();
 
-  // 🐨 Add the `listener` to the "hello" event.
-  // 💰 emitter.on(event, listener)
+	emitter.on('hello', listener);
 
-  // 🐨 Here, write an assertion that `console.log` was NOT called.
-  // 💰 expect(mock).not.toHaveBeenCalled()
+	expect(console.log).not.toHaveBeenCalled();
 
-  // 🐨 Emit the "hello" event with "John" as the data.
-  // 💰 emitter.emit(event, data)
+	emitter.emit('hello', 'John');
 
-  // 🐨 Finally, add the last assertion that the `console.log` was NOT called.
-})
+	expect(console.log).not.toHaveBeenCalled();
+});
